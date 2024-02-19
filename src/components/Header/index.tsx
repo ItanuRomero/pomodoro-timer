@@ -1,18 +1,18 @@
 import { Scroll, Timer } from '@phosphor-icons/react'
 import { HeaderContainer, IconsContainer, Title } from './styles'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 export function Header() {
   return (
     <HeaderContainer>
       <Title>pomodoro-timer</Title>
       <IconsContainer>
-        <Link to={'/'}>
+        <NavLink to={'/'} title="Timer">
           <Timer size={24} />
-        </Link>
-        <Link to={'/history'}>
+        </NavLink>
+        <NavLink to={'/history'} title="Histórico">
           <Scroll size={24} />
-        </Link>
+        </NavLink>
       </IconsContainer>
     </HeaderContainer>
   )

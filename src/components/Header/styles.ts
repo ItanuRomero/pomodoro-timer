@@ -13,7 +13,7 @@ export const Title = styled.h1`
   color: ${(props) => props.theme['gray-300']};
 `
 
-export const IconsContainer = styled.div`
+export const IconsContainer = styled.nav`
   display: flex;
   gap: 1rem;
 
@@ -32,7 +32,7 @@ export const IconsContainer = styled.div`
     border-bottom: 3px solid ${(props) => props.theme['green-500']};
   }
 
-  a:active {
+  a.active {
     color: ${(props) => props.theme['green-500']};
   }
 `
