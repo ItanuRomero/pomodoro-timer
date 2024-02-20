@@ -52,7 +52,7 @@ export const SubjectInput = styled(BaseInput)`
 `
 
 export const MinutesInput = styled(BaseInput)`
-  width: 2rem;
+  width: 4rem;
 `
 
 export const CountDownContainer = styled.div`
