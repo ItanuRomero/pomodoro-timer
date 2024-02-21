@@ -10,14 +10,23 @@ import {
   SubjectInput,
 } from './styles'
 import { useForm } from 'react-hook-form'
+import * as zod from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type FormValues = {
   subject: string
   minutes: number
 }
 
+const newCycleValidationSchema = zod.object({
+  subject: zod.string().min(1, 'A tarefa não pode estar em branco'),
+  minutes: zod.number().min(5).max(50),
+})
+
 export function Home() {
-  const { register, handleSubmit, watch } = useForm<FormValues>()
+  const { register, handleSubmit, watch } = useForm<FormValues>({
+    resolver: zodResolver(newCycleValidationSchema),
+  })
 
   function handleFormSubmit(data: FormValues) {
     console.log(data)
