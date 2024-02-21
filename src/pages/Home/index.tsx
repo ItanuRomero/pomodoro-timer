@@ -9,19 +9,34 @@ import {
   MinutesInput,
   SubjectInput,
 } from './styles'
+import { useForm } from 'react-hook-form'
+
+type FormValues = {
+  subject: string
+  minutes: number
+}
 
 export function Home() {
+  const { register, handleSubmit, watch } = useForm<FormValues>()
+
+  function handleFormSubmit(data: FormValues) {
+    console.log(data)
+  }
+
+  const subject = watch('subject')
+  const isSubmitDisabled = !subject
+
   return (
     <HomeContainer>
-      <form action="">
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
         <FormContainer>
           <label htmlFor="subject">Vou trabalhar em</label>
           <SubjectInput
             type="text"
-            name="subject"
             id="subject"
             placeholder="Insira o nome da sua tarefa"
             list="suggestions"
+            {...register('subject')}
           />
 
           <datalist id="suggestions">
@@ -35,12 +50,12 @@ export function Home() {
           <label htmlFor="minutes">durante</label>
           <MinutesInput
             type="number"
-            name="minutes"
             id="minutes"
             placeholder="00"
             step={5}
             min={5}
             max={60}
+            {...register('minutes', { valueAsNumber: true })}
           />
           <span>minutos.</span>
         </FormContainer>
@@ -57,7 +72,7 @@ export function Home() {
           </CountDownNumbers>
         </CountDownContainer>
 
-        <CountDownStarterButton disabled type="submit">
+        <CountDownStarterButton disabled={isSubmitDisabled} type="submit">
           <Play /> Começar
         </CountDownStarterButton>
       </form>
