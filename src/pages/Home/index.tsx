@@ -12,6 +12,13 @@ import {
 import { useForm } from 'react-hook-form'
 import * as zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+
+type Cycle = {
+  id: string
+  subject: string
+  minutes: number
+}
 
 const newCycleValidationSchema = zod.object({
   subject: zod.string().min(1, 'A tarefa não pode estar em branco'),
@@ -29,17 +36,32 @@ export function Home() {
     },
   })
 
-  function handleFormSubmit(data: FormValues) {
-    console.log(data)
+  const [cycles, setCycles] = useState<Cycle[]>([])
+  const [active, setActive] = useState<string | null>(null)
+
+  function handleCreateNewCycle(data: FormValues) {
+    const id = String(new Date().getTime())
+    setCycles([
+      {
+        id,
+        subject: data.subject,
+        minutes: data.minutes,
+      },
+      ...cycles,
+    ])
+    setActive(id)
     reset()
   }
 
   const subject = watch('subject')
   const isSubmitDisabled = !subject
 
+  const activeCycle = cycles.find((cycle) => cycle.id === active)
+  console.log(activeCycle)
+
   return (
     <HomeContainer>
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <form onSubmit={handleSubmit(handleCreateNewCycle)}>
         <FormContainer>
           <label htmlFor="subject">Vou trabalhar em</label>
           <SubjectInput
