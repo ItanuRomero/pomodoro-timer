@@ -41,13 +41,13 @@ export function Home() {
 
   function handleCreateNewCycle(data: FormValues) {
     const id = String(new Date().getTime())
-    setCycles([
+    setCycles((state) => [
+      ...state,
       {
         id,
         subject: data.subject,
         minutes: data.minutes,
       },
-      ...cycles,
     ])
     setActive(id)
     reset()
@@ -57,7 +57,14 @@ export function Home() {
   const isSubmitDisabled = !subject
 
   const activeCycle = cycles.find((cycle) => cycle.id === active)
-  console.log(activeCycle)
+
+  const minutesInSeconds = activeCycle ? activeCycle.minutes * 60 : 0
+
+  const cycleMinutes = Math.floor(minutesInSeconds / 60)
+  const cycleSeconds = minutesInSeconds % 60
+
+  const minutes = String(cycleMinutes).padStart(2, '0')
+  const seconds = String(cycleSeconds).padStart(2, '0')
 
   return (
     <HomeContainer>
@@ -95,13 +102,13 @@ export function Home() {
 
         <CountDownContainer>
           <CountDownNumbers>
-            <span>0</span>
-            <span>0</span>
+            <span>{minutes[0]}</span>
+            <span>{minutes[1]}</span>
           </CountDownNumbers>
           <DividerContainer>:</DividerContainer>
           <CountDownNumbers>
-            <span>0</span>
-            <span>0</span>
+            <span>{seconds[0]}</span>
+            <span>{seconds[1]}</span>
           </CountDownNumbers>
         </CountDownContainer>
 
