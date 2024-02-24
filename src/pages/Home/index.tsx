@@ -1,8 +1,9 @@
-import { Play } from '@phosphor-icons/react'
+import { HandPalm, Play } from '@phosphor-icons/react'
 import {
   CountDownContainer,
   CountDownNumbers,
-  CountDownStarterButton,
+  CountDownStartButton,
+  CountDownStopButton,
   DividerContainer,
   FormContainer,
   HomeContainer,
@@ -20,6 +21,8 @@ type Cycle = {
   subject: string
   minutes: number
   startDate: Date
+  interruptedDate?: Date
+  finishedDate?: Date
 }
 
 const newCycleValidationSchema = zod.object({
@@ -43,22 +46,6 @@ export function Home() {
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
 
   const activeCycle = cycles.find((cycle) => cycle.id === active)
-
-  useEffect(() => {
-    let interval: number
-
-    if (activeCycle) {
-      interval = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycle.startDate),
-        )
-      }, 1000)
-    }
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [activeCycle])
 
   function handleCreateNewCycle(data: FormValues) {
     const id = String(new Date().getTime())
@@ -95,6 +82,51 @@ export function Home() {
       document.title = `${minutes}:${seconds}`
     }
   }, [activeCycle, minutes, seconds])
+
+  useEffect(() => {
+    let interval: number
+
+    if (activeCycle) {
+      interval = setInterval(() => {
+        const secondsDifference = differenceInSeconds(
+          new Date(),
+          activeCycle.startDate,
+        )
+        if (secondsDifference >= minutesInSeconds) {
+          setCycles((state) =>
+            state.map((cycle) => {
+              return cycle.id === active
+                ? {
+                    ...cycle,
+                    finishedDate: new Date(),
+                  }
+                : cycle
+            }),
+          )
+          setActive(null)
+          setAmountSecondsPassed(0)
+        } else setAmountSecondsPassed(secondsDifference)
+      }, 1000)
+    }
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [activeCycle, active, minutesInSeconds])
+
+  function handleStopCountDown() {
+    setCycles((state) =>
+      state.map((cycle) => {
+        return cycle.id === active
+          ? {
+              ...cycle,
+              interruptedDate: new Date(),
+            }
+          : cycle
+      }),
+    )
+    setActive(null)
+  }
 
   return (
     <HomeContainer>
@@ -142,9 +174,15 @@ export function Home() {
           </CountDownNumbers>
         </CountDownContainer>
 
-        <CountDownStarterButton disabled={isSubmitDisabled} type="submit">
-          <Play /> Começar
-        </CountDownStarterButton>
+        {activeCycle ? (
+          <CountDownStopButton onClick={handleStopCountDown} type="button">
+            <HandPalm /> Interromper
+          </CountDownStopButton>
+        ) : (
+          <CountDownStartButton disabled={isSubmitDisabled} type="submit">
+            <Play /> Começar
+          </CountDownStartButton>
+        )}
       </form>
     </HomeContainer>
   )

@@ -81,7 +81,7 @@ export const DividerContainer = styled.div`
   color: ${(props) => props.theme['green-500']};
 `
 
-export const CountDownStarterButton = styled.button`
+export const CountDownBaseButton = styled.button`
   width: 100%;
   max-width: 700px;
 
@@ -92,7 +92,6 @@ export const CountDownStarterButton = styled.button`
 
   font-family: 'Roboto Mono';
 
-  background-color: ${(props) => props.theme['green-500']};
   color: ${(props) => props.theme.white};
   border: none;
   padding: 0.75rem;
@@ -106,8 +105,18 @@ export const CountDownStarterButton = styled.button`
     cursor: not-allowed;
     opacity: 0.7;
   }
+`
 
+export const CountDownStartButton = styled(CountDownBaseButton)`
+  background-color: ${(props) => props.theme['green-500']};
   &:not(:disabled):hover {
     background-color: ${(props) => props.theme['green-700']};
+  }
+`
+
+export const CountDownStopButton = styled(CountDownBaseButton)`
+  background-color: ${(props) => props.theme['red-500']};
+  &:not(:disabled):hover {
+    background-color: ${(props) => props.theme['red-700']};
   }
 `
