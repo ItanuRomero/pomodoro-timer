@@ -80,6 +80,8 @@ export function Home() {
   useEffect(() => {
     if (activeCycle) {
       document.title = `${minutes}:${seconds}`
+    } else {
+      document.title = 'Pomodoro timer'
     }
   }, [activeCycle, minutes, seconds])
 
