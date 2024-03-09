@@ -1,12 +1,9 @@
-import { UseFormRegister } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 import { FormContainer, MinutesInput, SubjectInput } from './styles'
-import { FormValues } from '../..'
 
-export function NewCycleForm({
-  register,
-}: {
-  register: UseFormRegister<FormValues>
-}) {
+export function NewCycleForm() {
+  const { register } = useFormContext()
+
   return (
     <FormContainer>
       <label htmlFor="subject">Vou trabalhar em</label>

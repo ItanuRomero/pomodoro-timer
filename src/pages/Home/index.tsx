@@ -4,7 +4,7 @@ import {
   CountDownStopButton,
   HomeContainer,
 } from './styles'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import * as zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -21,17 +21,17 @@ const newCycleValidationSchema = zod.object({
 export type FormValues = zod.infer<typeof newCycleValidationSchema>
 
 export function Home() {
-  const { register, handleSubmit, watch, reset } = useForm<FormValues>({
+  const [cycles, setCycles] = useState<Cycle[]>([])
+  const [active, setActive] = useState<string | null>(null)
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
+  const cyclesForm = useForm<FormValues>({
     resolver: zodResolver(newCycleValidationSchema),
     defaultValues: {
       subject: '',
       minutes: 5,
     },
   })
-
-  const [cycles, setCycles] = useState<Cycle[]>([])
-  const [active, setActive] = useState<string | null>(null)
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
+  const { handleSubmit, watch, reset } = cyclesForm
 
   const activeCycle = cycles.find((cycle) => cycle.id === active)
 
@@ -94,8 +94,9 @@ export function Home() {
             setAmountSecondsPassed,
           }}
         >
-          <NewCycleForm register={register} />
-
+          <FormProvider {...cyclesForm}>
+            <NewCycleForm />
+          </FormProvider>
           <Countdown />
         </CyclesContext.Provider>
         {activeCycle ? (
