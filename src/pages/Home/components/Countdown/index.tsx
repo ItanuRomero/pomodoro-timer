@@ -4,16 +4,16 @@ import {
   CountDownNumbers,
   DividerContainer,
 } from './styles'
-import { CyclesContext } from '../../Context/cycles'
+import { CycleContext } from '../../Context/cycles'
 import { differenceInSeconds } from 'date-fns'
 
 export function Countdown() {
   const {
     activeCycle,
     amountSecondsPassed,
-    handleFinishActiveCycle,
+    finishActiveCycle,
     setAmountSecondsPassed,
-  } = useContext(CyclesContext)
+  } = useContext(CycleContext)
   const minutesInSeconds = activeCycle ? activeCycle.minutes * 60 : 0
   const currentSeconds = activeCycle
     ? minutesInSeconds - amountSecondsPassed
@@ -43,7 +43,7 @@ export function Countdown() {
           activeCycle.startDate,
         )
         if (secondsDifference >= minutesInSeconds) {
-          handleFinishActiveCycle()
+          finishActiveCycle()
         } else setAmountSecondsPassed(secondsDifference)
       }, 1000)
     }
@@ -51,12 +51,7 @@ export function Countdown() {
     return () => {
       clearInterval(interval)
     }
-  }, [
-    activeCycle,
-    minutesInSeconds,
-    setAmountSecondsPassed,
-    handleFinishActiveCycle,
-  ])
+  }, [activeCycle, minutesInSeconds, setAmountSecondsPassed, finishActiveCycle])
   return (
     <CountDownContainer>
       <CountDownNumbers>
